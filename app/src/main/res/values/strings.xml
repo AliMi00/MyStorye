@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Storye</string>
+    <string name="genre">ژانر</string>
+    <string name="newest">جدید ترین ها</string>
+    <string name="popular">پر بازدید ترین ها</string>
+    <string name="rate">امتیاز</string>
+    <string name="StoryName">نام داستان</string>
+    <string name="Author">نویسنده</string>
+    <string name="like">لایک</string>
+</resources>
