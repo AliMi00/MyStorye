@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/imageView"
@@ -15,7 +17,7 @@
         android:layout_marginStart="13dp"
         android:layout_marginLeft="13dp"
         android:layout_marginTop="5dp"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@drawable/book" />
 
     <TextView
         android:id="@+id/txtStoryName"
@@ -79,7 +81,7 @@
         android:layout_marginStart="285dp"
         android:layout_marginLeft="285dp"
         android:layout_marginTop="6dp"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@drawable/like" />
 
     <ImageView
         android:id="@+id/like"
@@ -91,7 +93,7 @@
         android:layout_marginStart="286dp"
         android:layout_marginLeft="286dp"
         android:layout_marginTop="37dp"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@drawable/likee" />
 
 
 </RelativeLayout>

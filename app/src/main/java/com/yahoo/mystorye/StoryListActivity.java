@@ -43,11 +43,21 @@ public class StoryListActivity extends AppCompatActivity {
     }
     ListView_Adapter.OnClickListener clickListener = new ListView_Adapter.OnClickListener() {
         @Override
-        public void onClickViewInfo(tb_Story info) {
+        public void onClickViewInfo(final tb_Story info) {
 
             //todo set to go to Story Activity
             //go to the Story Activity
+            Intent intent = new Intent(StoryListActivity.this,StoryActivity.class);
+            StoryActivity.OnStoryListener onStoryListener = new StoryActivity.OnStoryListener() {
+                @Override
+                public tb_Story onStoryListener() {
 
+                    return info;
+                }
+            };
+            StoryActivity.onStoryListener = onStoryListener;
+            StoryActivity.story = info;
+            startActivity(intent);
 
 
         }
@@ -102,7 +112,7 @@ class ListView_Adapter extends BaseAdapter
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View rowView;
+        final View rowView;
 
         rowView=inflater.inflate(_templateId, null);
 
@@ -112,14 +122,26 @@ class ListView_Adapter extends BaseAdapter
             TextView txtGenre = rowView.findViewById(R.id.txtGenre);
             TextView txtLike = rowView.findViewById(R.id.txtLike);
             TextView txtRate = rowView.findViewById(R.id.txtRate);
+            ImageView imgLike = rowView.findViewById(R.id.like);
+            ImageView imgRate = rowView.findViewById(R.id.rate);
+
 
             txtStoryName.setText(String.format("%s  by %s",
                     lstData.get(position).StoryName,
                     lstData.get(position).Author));
 
             txtGenre.setText(lstData.get(position).Genre);
-            txtLike.setText(String.valueOf(lstData.get(position).Like));
-            txtRate.setText(String.valueOf(lstData.get(position).Rate));
+            if (lstData.get(position).Like ==0){
+                txtRate.setVisibility(View.GONE);
+                txtLike.setVisibility(View.GONE);
+                imgLike.setVisibility(View.GONE);
+                imgRate.setVisibility(View.GONE);
+            }
+            else {
+                txtRate.setText(String.valueOf(lstData.get(position).Rate));
+                txtLike.setText(String.valueOf(lstData.get(position).Like));
+            }
+
         }
         catch (Exception e){
 
@@ -137,4 +159,5 @@ class ListView_Adapter extends BaseAdapter
 
         return rowView;
     }
+
 }

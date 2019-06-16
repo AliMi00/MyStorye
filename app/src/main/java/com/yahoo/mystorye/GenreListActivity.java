@@ -126,7 +126,7 @@ class ListView_AdapterString extends BaseAdapter {
             txtLike.setText("");
             txtRate.setText("");
             txtStoryName.setText(String.format("%s ",
-                    lstData));
+                    lstData.get(position)));
 
 
         } catch (Exception e) {

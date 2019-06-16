@@ -33,12 +33,9 @@ public class tb_StoryDataSource {
     public tb_StoryDataSource(Context context)
     {
         dbManagement=new DatabaseManagement(context);
+
     }
-    public tb_StoryDataSource(Context context, AliList aliList)
-    {
-        dbManagement=new DatabaseManagement(context);
-        _AliList = aliList;
-    }
+
 
     public void open()
     {
