@@ -165,10 +165,10 @@ public class MainActivity extends AppCompatActivity {
                 dataSource.add(story);
                 dataSource.close();
             }
-            for(int i=235 ; i<242 ;i++) {
+            for(int i=235 ; i<236 ;i++) {
                 tb_Story story = new tb_Story();
                 story.PKStory = i;
-                story.StoryName = "داستان من3 ";
+                story.StoryName = "داستان من6 ";
                 story.Story = getTermsString("story.txt");
                 story.Genre = "genre";
                 story.Like = 0;
@@ -195,8 +195,11 @@ public class MainActivity extends AppCompatActivity {
                     new InputStreamReader(getAssets().open(FileName)));
 
             String str;
-            while ((str = reader.readLine()) != null) {
-                termsString.append(str);
+
+            while ((str = reader.readLine()) != null ) {
+
+                termsString.append(str+"\n");
+
             }
 
             reader.close();

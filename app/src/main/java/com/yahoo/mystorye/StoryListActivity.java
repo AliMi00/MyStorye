@@ -43,20 +43,14 @@ public class StoryListActivity extends AppCompatActivity {
     }
     ListView_Adapter.OnClickListener clickListener = new ListView_Adapter.OnClickListener() {
         @Override
-        public void onClickViewInfo(final tb_Story info) {
+        public void onClickViewInfo( int PKStory) {
 
             //todo set to go to Story Activity
             //go to the Story Activity
             Intent intent = new Intent(StoryListActivity.this,StoryActivity.class);
-            StoryActivity.OnStoryListener onStoryListener = new StoryActivity.OnStoryListener() {
-                @Override
-                public tb_Story onStoryListener() {
 
-                    return info;
-                }
-            };
-            StoryActivity.onStoryListener = onStoryListener;
-            StoryActivity.story = info;
+            intent.putExtra("PK",PKStory);
+            //StoryActivity.PKStory = PKStory;
             startActivity(intent);
 
 
@@ -81,7 +75,7 @@ class ListView_Adapter extends BaseAdapter
 
     public interface OnClickListener{
 
-        public void onClickViewInfo(tb_Story info);
+        public void onClickViewInfo(int PKStory);
     }
 
     public ListView_Adapter(Context context, List<tb_Story> lst,
@@ -152,7 +146,7 @@ class ListView_Adapter extends BaseAdapter
             @Override
             public void onClick(View v) {
                 if(_onClickListener!=null)
-                    _onClickListener.onClickViewInfo( lstData.get(position));
+                    _onClickListener.onClickViewInfo( lstData.get(position).PKStory);
 
             }
         });

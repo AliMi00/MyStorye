@@ -1,0 +1,16 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 956d3d1cb7ec0848c0612d6fb880bee00d9e9080)
++++ app/src/main/AndroidManifest.xml	(date 1560281955191)
+@@ -9,7 +9,7 @@
+         android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+         android:theme="@style/AppTheme">
+-        <activity android:name=".GenreListActivity"></activity>
++        <activity android:name=".GenreListActivity" />
+         <activity android:name=".StoryListActivity" />
+         <activity android:name=".MainActivity">
+             <intent-filter>
