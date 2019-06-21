@@ -12,6 +12,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import database.DatabaseManagement;
@@ -158,24 +162,20 @@ public class MainActivity extends AppCompatActivity {
     public void insertStory(){
         if (DatabaseManagement.isFirstTime)
         {
-            List<tb_Story> storyList =StaticStoryData.insertStory();
-            for(tb_Story story : storyList){
-                tb_StoryDataSource dataSource = new tb_StoryDataSource(MainActivity.this);
-                dataSource.open();
-                dataSource.add(story);
-                dataSource.close();
-            }
-            for(int i=235 ; i<236 ;i++) {
+            DateFormat df = new SimpleDateFormat("yyyy.MM.dd  'at' HH:mm:ss ");
+            String date = df.format(Calendar.getInstance().getTime());
+
+            for(int i=235 ; i<238 ;i++) {
                 tb_Story story = new tb_Story();
                 story.PKStory = i;
-                story.StoryName = "داستان من6 ";
-                story.Story = getTermsString("story.txt");
+                story.StoryName = "داستان "+String.valueOf(i);
+                story.Story = getTermsStringBase("story.txt");
                 story.Genre = "genre";
                 story.Like = 0;
                 story.Rate = i;
                 story.Version = i;
                 story.MarkedPlace = i;
-                story.CreateDate = "date" ;
+                story.CreateDate = date ;
                 story.Author = "author" ;
 
                 tb_StoryDataSource dataSource = new tb_StoryDataSource(MainActivity.this);
@@ -187,7 +187,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    private String getTermsString(String FileName) {
+    private List<String> getTermsString(String FileName) {
+        StringBuilder termsString = new StringBuilder();
+        BufferedReader reader;
+        List<String> pagesStory=new ArrayList<>();
+        try {
+            reader = new BufferedReader(
+                    new InputStreamReader(getAssets().open(FileName)));
+
+            String str;
+            int i =0;
+            while ((str = reader.readLine()) != null ) {
+                termsString.append(str+"\n");
+                i++;
+                while (i==25){
+                    pagesStory.add(termsString.toString());
+                    termsString.delete(0,termsString.length());
+                    i=0;
+                }
+
+
+            }
+
+            reader.close();
+            return pagesStory;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    private String getTermsStringBase(String FileName) {
         StringBuilder termsString = new StringBuilder();
         BufferedReader reader;
         try {
@@ -197,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
             String str;
 
             while ((str = reader.readLine()) != null ) {
-
                 termsString.append(str+"\n");
 
             }
@@ -209,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
+
 
     public void setServerRespond(){
 
@@ -226,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        webService.transmitAsync("api/values1");
+        webService.transmitAsync("api/values");
 
     }
 

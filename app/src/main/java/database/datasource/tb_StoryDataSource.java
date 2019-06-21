@@ -95,7 +95,30 @@ public class tb_StoryDataSource {
                 ,null);
 
     }
+    public void updatePage(int PKStory,int PageNumber)
+    {
+        if(find(PKStory)==null)
+            return;
+        tb_Story data= find(PKStory);
+        ContentValues values = new ContentValues();
 
+        values.put(tb_StoryStructure.colMarkedPlace, PageNumber);
+        values.put(tb_StoryStructure.colPKStory, data.PKStory);
+        values.put(tb_StoryStructure.colStory, data.Story);
+        values.put(tb_StoryStructure.colAuthor, data.Author);
+        values.put(tb_StoryStructure.colCreateDate, data.CreateDate);
+        values.put(tb_StoryStructure.colGenre, data.Genre);
+        values.put(tb_StoryStructure.colVersion, data.Version);
+        values.put(tb_StoryStructure.colStoryName, data.StoryName);
+        values.put(tb_StoryStructure.colRate, data.Rate);
+        values.put(tb_StoryStructure.colLike, data.Like);
+
+        database.update(tb_StoryStructure.tableName,
+                values,
+                tb_StoryStructure.colPKStory+"="+data.PKStory
+                ,null);
+
+    }
     public void deleteAll()
     {
         database.delete(tb_StoryStructure.tableName, null,null);
