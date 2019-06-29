@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TestStoryActivity"
+
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/colorBack"
+        android:layout_gravity="center_horizontal"
+        >
+        <TextView
+            android:id="@+id/txtGenre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/iransans"
+            android:text="StoryPage"
+            android:textColor="@color/colorW"
+            android:padding="20dp"/>
+        <TextView
+            android:id="@+id/txtStoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/iransans"
+            android:text="@string/StoryName"
+            android:textColor="@color/colorW"
+            android:padding="10dp"/>
+        <TextView
+            android:id="@+id/txtauthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/iransans"
+            android:text="نویسنده"
+            android:textColor="@color/colorW"
+            android:padding="20dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/myborde"
+        android:layout_gravity="center_horizontal"
+        android:padding="5sp">
+        <Button
+            android:id="@+id/btnMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_cus"
+            android:textColor="@color/colorW"
+            android:layout_margin="1sp"
+            android:text="کوچک نمایی" />
+        <EditText
+            android:id="@+id/edtPageNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:fontFamily="@font/iransans"
+            android:hint="صفحه"
+            android:padding="10dp"/>
+        <Button
+            android:id="@+id/btnGoPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/iransans"
+            android:layout_margin="1sp"
+            android:textColor="@color/colorW"
+            android:background="@drawable/button_cus"
+            android:text="بروبه"/>
+
+        <Button
+            android:id="@+id/btnMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1sp"
+            android:textColor="@color/colorW"
+            android:background="@drawable/button_cus"
+            android:text="بزرگ نمایی" />
+
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/StoryTestList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"/>
+
+
+</LinearLayout>

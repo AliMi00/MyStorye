@@ -165,18 +165,18 @@ public class MainActivity extends AppCompatActivity {
             DateFormat df = new SimpleDateFormat("yyyy.MM.dd  'at' HH:mm:ss ");
             String date = df.format(Calendar.getInstance().getTime());
 
-            for(int i=235 ; i<238 ;i++) {
+            for(int i=1 ; i<10 ;i++) {
                 tb_Story story = new tb_Story();
                 story.PKStory = i;
-                story.StoryName = "داستان "+String.valueOf(i);
+                story.StoryName = "داستان چرت"+String.valueOf(i);
                 story.Story = getTermsStringBase("story.txt");
-                story.Genre = "genre";
+                story.Genre = "علمی تخیلی "+i;
                 story.Like = 0;
                 story.Rate = i;
                 story.Version = i;
                 story.MarkedPlace = i;
                 story.CreateDate = date ;
-                story.Author = "author" ;
+                story.Author = " علی مبینی" ;
 
                 tb_StoryDataSource dataSource = new tb_StoryDataSource(MainActivity.this);
                 dataSource.open();
