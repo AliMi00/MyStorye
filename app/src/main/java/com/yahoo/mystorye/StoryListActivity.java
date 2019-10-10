@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import database.datasource.tb_StoryDataSource;
@@ -22,7 +23,7 @@ import database.table.tb_Story;
 
 public class StoryListActivity extends AppCompatActivity {
 
-    public static OnListListener ListListener;
+    public static List<tb_Story> storyList;
 
     ListView lstStory;
     @Override
@@ -31,43 +32,43 @@ public class StoryListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_story_list);
         lstStory=findViewById(R.id.lstStory);
 
-        LoadMyList loadList = new LoadMyList(StoryListActivity.this,ListListener,clickListener);
+        LoadMyList loadList = new LoadMyList(StoryListActivity.this,clickListener,storyList);
         loadList.execute();
     }
     ListView_Adapter.OnClickListener clickListener = new ListView_Adapter.OnClickListener() {
         @Override
         public void onClickViewInfo( int PKStory) {
 
-            //todo set to go to Story Activity
-            //go to the Story Activity
+            //todo set to go to storyText Activity
+            //go to the storyText Activity
             Intent intent = new Intent(StoryListActivity.this,TestStoryActivity.class);
 
             intent.putExtra("PK",PKStory);
-            //StoryActivity.PKStory = PKStory;
+            //StoryActivity.id = id;
             startActivity(intent);
 
 
         }
     };
-    //interface for get list
-    interface OnListListener{
-        public List<tb_Story> onListListener();
-    }
+
+
     public class LoadMyList extends AsyncTask<Void ,Void,Void>{
 
         Context _Context;
-        StoryListActivity.OnListListener _onListListener;
         ListView_Adapter.OnClickListener _clickListener;
         List<tb_Story> lst;
         ListView_Adapter MyAdapter;
         ProgressDialog proDialog;
 
         public LoadMyList(Context context,
-                           StoryListActivity.OnListListener onListListener,
-                           ListView_Adapter.OnClickListener clickListener) {
+                           ListView_Adapter.OnClickListener clickListener,
+                           List<tb_Story> storyList)
+        {
+
             _Context = context;
-            _onListListener = onListListener;
             _clickListener = clickListener;
+            if(storyList != null)
+                lst = storyList;
         }
 
         @Override
@@ -85,8 +86,7 @@ public class StoryListActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                if(_onListListener.onListListener()!=null)
-                    lst = _onListListener.onListListener();
+
 
                 MyAdapter = new ListView_Adapter(_Context,
                         lst,

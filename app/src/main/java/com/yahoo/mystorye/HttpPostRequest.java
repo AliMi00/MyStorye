@@ -40,9 +40,11 @@ public class HttpPostRequest extends AsyncTask<String, String, String> {
         try {
             URL url = new URL(params[0]);
             connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("content-type", "application/json");
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
+
 
             outputStream = new BufferedOutputStream(connection.getOutputStream());
             BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(outputStream,"UTF-8"));

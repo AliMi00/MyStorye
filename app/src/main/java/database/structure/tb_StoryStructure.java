@@ -5,22 +5,22 @@ public class tb_StoryStructure {
     public static final String tableName = "tb_Story";
 
 
-	public static final String colPKStory = "PK_Story";
-    public static final String colStoryName = "StoryName";
-    public static final String colStory = "Story";
-    public static final String colAuthor = "Author";
-    public static final String colCreateDate = "CreateDate";
-    public static final String colVersion = "Version";
-    public static final String colMarkedPlace = "MarkedPlace";
-    public static String colGenre = "Genre";
-    public static final String colRate = "Rate";
-    public static final String colLike = "Like";
+	public static final String colId = "id";
+    public static final String colStoryName = "storyName";
+    public static final String colStoryText = "storyText";
+    public static final String colAuthor = "author";
+    public static final String colCreateDate = "createDate";
+    public static final String colVersion = "version";
+    public static final String colMarkedPlace = "markedPlace";
+    public static String colGenre = "genre";
+    public static final String colRate = "rate";
+    public static final String colLike = "like";
 
     // "create table  tb_Story (
     public static final String createTableQuery = "create table " + tableName + "(" +
-            colPKStory + " integer primary key ," +
+            colId + " integer primary key ," +
             colStoryName + " text," +
-            colStory + " text," +
+            colStoryText + " text," +
             colAuthor + " text," +
             colCreateDate + " text," +
             colVersion + " integer," +

@@ -25,7 +25,7 @@ public class GenreListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_genre_list);
-        //list of Type here is Genre
+        //list of Type here is genre
         lst=ListListener.onListListenerString();
 
         //todo Change and set new view for list
@@ -42,20 +42,14 @@ public class GenreListActivity extends AppCompatActivity {
         @Override
         public void onClickViewInfo(final String info) {
 
+            tb_StoryDataSource dataSource = new tb_StoryDataSource(GenreListActivity.this);
+            dataSource.open();
+            List<tb_Story> lst = dataSource.getListByGenre(info);
+            dataSource.close();
 
-            //go to the Story Activity
-            StoryListActivity.OnListListener Lst = new StoryListActivity.OnListListener() {
-                @Override
-                public List<tb_Story> onListListener() {
-                    tb_StoryDataSource dataSource = new tb_StoryDataSource(GenreListActivity.this);
-                    dataSource.open();
-                    List<tb_Story> lst = dataSource.getListByGenre(info);
-                    dataSource.close();
-                    return lst;
-                }
+            //go to the storyText Activity
 
-            };
-            StoryListActivity.ListListener =Lst;
+            StoryListActivity.storyList =lst;
             Intent intent=new Intent(GenreListActivity.this, StoryListActivity.class);
             startActivity(intent);
             finish();

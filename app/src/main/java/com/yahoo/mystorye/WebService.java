@@ -20,7 +20,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class WebService {
 
     public Object values;
-    private final String serverAddress="http://192.168.1.6:88/";
+    private final String serverAddress="http://192.168.1.6/";
     private  Context _context;
     private OnWebServiceListener _onWebServiceListener;
 

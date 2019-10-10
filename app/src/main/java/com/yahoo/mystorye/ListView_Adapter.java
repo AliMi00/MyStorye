@@ -68,20 +68,19 @@ class ListView_Adapter extends BaseAdapter
             ImageView imgRate = rowView.findViewById(R.id.rate);
 
 
-            txtStoryName.setText(String.format("%s  by %s",
-                    lstData.get(position).StoryName,
-                    lstData.get(position).Author));
+            txtStoryName.setText(String.format("%s",
+                    lstData.get(position).storyName));
 
-            txtGenre.setText(lstData.get(position).Genre);
-            if (lstData.get(position).Like ==0){
+            txtGenre.setText(lstData.get(position).genre);
+            if (lstData.get(position).like ==0){
                 txtRate.setVisibility(View.GONE);
                 txtLike.setVisibility(View.GONE);
                 imgLike.setVisibility(View.GONE);
                 imgRate.setVisibility(View.GONE);
             }
             else {
-                txtRate.setText(String.valueOf(lstData.get(position).Rate));
-                txtLike.setText(String.valueOf(lstData.get(position).Like));
+                txtRate.setText(String.valueOf(lstData.get(position).rate));
+                txtLike.setText(String.valueOf(lstData.get(position).like));
             }
 
         }
@@ -94,7 +93,7 @@ class ListView_Adapter extends BaseAdapter
             @Override
             public void onClick(View v) {
                 if(_onClickListener!=null)
-                    _onClickListener.onClickViewInfo( lstData.get(position).PKStory);
+                    _onClickListener.onClickViewInfo( lstData.get(position).id);
 
             }
         });

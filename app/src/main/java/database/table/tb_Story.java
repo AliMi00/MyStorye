@@ -2,15 +2,15 @@ package database.table;
 
 public class tb_Story {
 
-    public int PKStory;
-    public String StoryName;
-    public String Story;
-    public String Author;
-    public String CreateDate;
-    public int Version;
-    public int MarkedPlace;
-    public String Genre;
-    public int Rate;
-    public int Like;
+    public int id;
+    public String storyName;
+    public String storyText;
+    public String author;
+    public String createDate;
+    public int version;
+    public int markedPlace;
+    public String genre;
+    public int rate;
+    public int like;
 
 }

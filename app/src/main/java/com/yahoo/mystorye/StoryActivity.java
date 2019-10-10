@@ -59,11 +59,11 @@ public class StoryActivity extends AppCompatActivity {
         FullStory = dataSource.find(PKStory);
         dataSource.close();
 
-        StoryPages = getTermsString(FullStory.Story);
-        txtGenre.setText(FullStory.Genre);
-        PageNumber=FullStory.MarkedPlace;
+        StoryPages = getTermsString(FullStory.storyText);
+        txtGenre.setText(FullStory.genre);
+        PageNumber=FullStory.markedPlace;
         txtPageNumber.setText(String.valueOf(PageNumber));
-        txtStoryName.setText(FullStory.StoryName);
+        txtStoryName.setText(FullStory.storyName);
 
         txtStory.setText(StoryPages.get(PageNumber));
 
@@ -115,7 +115,7 @@ public class StoryActivity extends AppCompatActivity {
 
 
 
-    //get Story Pages
+    //get storyText Pages
     private List<String> getTermsString(String Story) {
         StringBuilder termsString = new StringBuilder();
         BufferedReader reader;

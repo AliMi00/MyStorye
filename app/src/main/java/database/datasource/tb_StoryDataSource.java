@@ -17,9 +17,9 @@ public class tb_StoryDataSource {
     private DatabaseManagement dbManagement;
     private AliList _AliList;
     private String[] allColumns={
-            tb_StoryStructure.colPKStory,
+            tb_StoryStructure.colId,
             tb_StoryStructure.colStoryName ,
-            tb_StoryStructure.colStory,
+            tb_StoryStructure.colStoryText,
             tb_StoryStructure.colAuthor,
             tb_StoryStructure.colCreateDate,
             tb_StoryStructure.colVersion,
@@ -56,16 +56,16 @@ public class tb_StoryDataSource {
     public long add(tb_Story data) {
         ContentValues values = new ContentValues();
 
-        values.put(tb_StoryStructure.colMarkedPlace, data.MarkedPlace);
-        values.put(tb_StoryStructure.colPKStory, data.PKStory);
-        values.put(tb_StoryStructure.colStory, data.Story);
-        values.put(tb_StoryStructure.colAuthor, data.Author);
-        values.put(tb_StoryStructure.colCreateDate, data.CreateDate);
-        values.put(tb_StoryStructure.colGenre, data.Genre);
-        values.put(tb_StoryStructure.colStoryName, data.StoryName);
-        values.put(tb_StoryStructure.colVersion, data.Version);
-        values.put(tb_StoryStructure.colRate, data.Rate);
-        values.put(tb_StoryStructure.colLike, data.Like);
+        values.put(tb_StoryStructure.colMarkedPlace, data.markedPlace);
+        values.put(tb_StoryStructure.colId, data.id);
+        values.put(tb_StoryStructure.colStoryText, data.storyText);
+        values.put(tb_StoryStructure.colAuthor, data.author);
+        values.put(tb_StoryStructure.colCreateDate, data.createDate);
+        values.put(tb_StoryStructure.colGenre, data.genre);
+        values.put(tb_StoryStructure.colStoryName, data.storyName);
+        values.put(tb_StoryStructure.colVersion, data.version);
+        values.put(tb_StoryStructure.colRate, data.rate);
+        values.put(tb_StoryStructure.colLike, data.like);
 
 
         return database.insert(tb_StoryStructure.tableName, null, values);
@@ -73,25 +73,25 @@ public class tb_StoryDataSource {
 
     public void update(tb_Story data)
     {
-        if(find(data.PKStory)==null)
+        if(find(data.id)==null)
             return;
 
         ContentValues values = new ContentValues();
 
-        values.put(tb_StoryStructure.colMarkedPlace, data.MarkedPlace);
-        values.put(tb_StoryStructure.colPKStory, data.PKStory);
-        values.put(tb_StoryStructure.colStory, data.Story);
-        values.put(tb_StoryStructure.colAuthor, data.Author);
-        values.put(tb_StoryStructure.colCreateDate, data.CreateDate);
-        values.put(tb_StoryStructure.colGenre, data.Genre);
-        values.put(tb_StoryStructure.colVersion, data.Version);
-        values.put(tb_StoryStructure.colStoryName, data.StoryName);
-        values.put(tb_StoryStructure.colRate, data.Rate);
-        values.put(tb_StoryStructure.colLike, data.Like);
+        values.put(tb_StoryStructure.colMarkedPlace, data.markedPlace);
+        values.put(tb_StoryStructure.colId, data.id);
+        values.put(tb_StoryStructure.colStoryText, data.storyText);
+        values.put(tb_StoryStructure.colAuthor, data.author);
+        values.put(tb_StoryStructure.colCreateDate, data.createDate);
+        values.put(tb_StoryStructure.colGenre, data.genre);
+        values.put(tb_StoryStructure.colVersion, data.version);
+        values.put(tb_StoryStructure.colStoryName, data.storyName);
+        values.put(tb_StoryStructure.colRate, data.rate);
+        values.put(tb_StoryStructure.colLike, data.like);
 
         database.update(tb_StoryStructure.tableName,
                 values,
-                tb_StoryStructure.colPKStory+"="+data.PKStory
+                tb_StoryStructure.colId +"="+data.id
                 ,null);
 
     }
@@ -103,19 +103,19 @@ public class tb_StoryDataSource {
         ContentValues values = new ContentValues();
 
         values.put(tb_StoryStructure.colMarkedPlace, PageNumber);
-        values.put(tb_StoryStructure.colPKStory, data.PKStory);
-        values.put(tb_StoryStructure.colStory, data.Story);
-        values.put(tb_StoryStructure.colAuthor, data.Author);
-        values.put(tb_StoryStructure.colCreateDate, data.CreateDate);
-        values.put(tb_StoryStructure.colGenre, data.Genre);
-        values.put(tb_StoryStructure.colVersion, data.Version);
-        values.put(tb_StoryStructure.colStoryName, data.StoryName);
-        values.put(tb_StoryStructure.colRate, data.Rate);
-        values.put(tb_StoryStructure.colLike, data.Like);
+        values.put(tb_StoryStructure.colId, data.id);
+        values.put(tb_StoryStructure.colStoryText, data.storyText);
+        values.put(tb_StoryStructure.colAuthor, data.author);
+        values.put(tb_StoryStructure.colCreateDate, data.createDate);
+        values.put(tb_StoryStructure.colGenre, data.genre);
+        values.put(tb_StoryStructure.colVersion, data.version);
+        values.put(tb_StoryStructure.colStoryName, data.storyName);
+        values.put(tb_StoryStructure.colRate, data.rate);
+        values.put(tb_StoryStructure.colLike, data.like);
 
         database.update(tb_StoryStructure.tableName,
                 values,
-                tb_StoryStructure.colPKStory+"="+data.PKStory
+                tb_StoryStructure.colId +"="+data.id
                 ,null);
 
     }
@@ -128,7 +128,7 @@ public class tb_StoryDataSource {
     {
 
         database.delete(tb_StoryStructure.tableName,
-                tb_StoryStructure.colPKStory +"=" + id,
+                tb_StoryStructure.colId +"=" + id,
                 null);
     }
 
@@ -144,7 +144,7 @@ public class tb_StoryDataSource {
     {
         Cursor cursor=database.query(tb_StoryStructure.tableName,
                 allColumns,
-                tb_StoryStructure.colPKStory+"="+id,
+                tb_StoryStructure.colId +"="+id,
                 null,null,null,null,null);
 
         if(cursor.getCount()==0)
@@ -190,7 +190,7 @@ public class tb_StoryDataSource {
                     allColumns,
                     null,
                     null, null, null,
-                    tb_StoryStructure.colPKStory + " DESC");
+                    tb_StoryStructure.colId + " DESC");
 
             if (cursor.getCount() == 0)
                 return null;
@@ -218,7 +218,7 @@ public class tb_StoryDataSource {
                     allColumns,
                     tb_StoryStructure.colGenre+ "= '"+Genre+"'" ,
                     null, null, null,
-                    tb_StoryStructure.colPKStory + " DESC");
+                    tb_StoryStructure.colId + " DESC");
 
             if (cursor.getCount() == 0)
                 return null;
@@ -289,7 +289,7 @@ public class tb_StoryDataSource {
                 allColumns,
                 null,
                 null, null, null,
-                tb_StoryStructure.colPKStory + " DESC");
+                tb_StoryStructure.colId + " DESC");
 
         if (cursor.getCount() == 0)
             return null;
@@ -335,16 +335,16 @@ public class tb_StoryDataSource {
     {
         tb_Story data=new tb_Story();
 
-        data.PKStory = cursor.getInt(0);
-        data.StoryName=cursor.getString(1);
-        data.Story=cursor.getString(2);
-        data.Author=cursor.getString(3);
-        data.CreateDate=cursor.getString(4);
-        data.Version=cursor.getInt(5);
-        data.MarkedPlace=cursor.getInt(6);
-        data.Genre=cursor.getString(7);
-        data.Rate=cursor.getInt(8);
-        data.Like=cursor.getInt(9);
+        data.id = cursor.getInt(0);
+        data.storyName =cursor.getString(1);
+        data.storyText =cursor.getString(2);
+        data.author =cursor.getString(3);
+        data.createDate =cursor.getString(4);
+        data.version =cursor.getInt(5);
+        data.markedPlace =cursor.getInt(6);
+        data.genre =cursor.getString(7);
+        data.rate =cursor.getInt(8);
+        data.like =cursor.getInt(9);
 
         return data;
     }

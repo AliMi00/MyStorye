@@ -1,16 +1,24 @@
 package com.yahoo.mystorye;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,13 +33,24 @@ import database.table.tb_Story;
 public class MainActivity extends AppCompatActivity {
 
     Button btnPopular,btnNew, btnSaved,btnGenre,btnTest;
-
-
+    AdView adViewBottom;
+    InterstitialAd intAd;
+    List<tb_Story> lst2 = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //adding banner ads
+        MobileAds.initialize(getApplicationContext(),"ca-app-pub-8126152475553425~4180777880");
+        adViewBottom =findViewById(R.id.adViewBottom);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adViewBottom.loadAd(adRequest);
+
+        //MobileAds.initialize(getApplicationContext(),"ca-app-pub-3940256099942544~3347511713");
+        intAd = new InterstitialAd(getApplicationContext());
+        intAd.setAdUnitId("ca-app-pub-8126152475553425/7758072570");
+        intAd.loadAd(new AdRequest.Builder().build());
 
         insertStory();
 
@@ -43,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         btnPopular.setOnClickListener(btnPopularOnClickListener);
 
         btnNew = findViewById(R.id.btnNew);
-        btnNew.setOnClickListener(btnNewOnClickListener);
+        btnNew.setOnClickListener(btnNewStoryOnClickListener);
 
         btnSaved = findViewById(R.id.btnSaved);
         btnSaved.setOnClickListener(btnSavedOnClickListener);
@@ -70,69 +89,55 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     };
+
+    View.OnClickListener btnNewStoryOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            WebService webService = new WebService(MainActivity.this,onWebServiceListener);
+            webService.transmitAsync("api/StoryTemp");
+
+            StoryListActivity.storyList =lst2;
+            Intent intent=new Intent(MainActivity.this, StoryListActivity.class);
+            startActivity(intent);
+        }
+    };
+
 //btnPopular
     View.OnClickListener btnPopularOnClickListener = new View.OnClickListener() {
         @Override public void onClick(View v) {
-            StoryListActivity.OnListListener Lst = new StoryListActivity.OnListListener() {
-                @Override
-                public List<tb_Story> onListListener() {
-                   //todo connect server and get the list and delete this code
-                    tb_StoryDataSource dataSource = new tb_StoryDataSource(MainActivity.this);
-                    dataSource.open();
-                    List<tb_Story> lst = dataSource.getLikeList();
-                    dataSource.close();
-                    return lst;
-                }
 
-            };
-            StoryListActivity.ListListener =Lst;
-            Intent intent=new Intent(MainActivity.this, StoryListActivity.class);
-            startActivity(intent);
+            LoadMyList myList = new LoadMyList(MainActivity.this);
+            myList.execute();
 
         }
     };
 
-//btnNew
-    View.OnClickListener btnNewOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v)
-        {
-            StoryListActivity.OnListListener Lst = new StoryListActivity.OnListListener() {
-                @Override
-                public List<tb_Story> onListListener() {
-                    //todo connect server and get the list and delete this code
-                    tb_StoryDataSource dataSource = new tb_StoryDataSource(MainActivity.this);
-                    dataSource.open();
-                    List<tb_Story> lst = dataSource.getNewList();
-                    dataSource.close();
-                    return lst;
-                }
 
-            };
-            StoryListActivity.ListListener =Lst;
-            Intent intent=new Intent(MainActivity.this, StoryListActivity.class);
-            startActivity(intent);
-        }
-    };
+//webservice
+    WebService.OnWebServiceListener onWebServiceListener = new WebService.OnWebServiceListener() {
+    @Override
+    public void onDataReceived(String value) {
+        Gson gson = new Gson();
+         StoryListActivity.storyList =  gson.fromJson(value,new TypeToken<List<tb_Story>>() {}.getType());
+         lst2 =  gson.fromJson(value,new TypeToken<List<tb_Story>>() {}.getType());
+    }
+};
 
 //btnSaves
     View.OnClickListener btnSavedOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            StoryListActivity.OnListListener Lst = new StoryListActivity.OnListListener() {
-                @Override
-                public List<tb_Story> onListListener() {
-                    tb_StoryDataSource dataSource = new tb_StoryDataSource(MainActivity.this);
-                    dataSource.open();
-                    List<tb_Story> lst = dataSource.getRateList();
-                    dataSource.close();
-                    return lst;
-                }
 
-            };
-            StoryListActivity.ListListener =Lst;
+            tb_StoryDataSource dataSource = new tb_StoryDataSource(MainActivity.this);
+            dataSource.open();
+            List<tb_Story> lst = dataSource.getRateList();
+            dataSource.close();
+
+            intAd.show();
+            StoryListActivity.storyList =lst;
             Intent intent=new Intent(MainActivity.this, StoryListActivity.class);
             startActivity(intent);
+
 
         }
     };
@@ -162,27 +167,13 @@ public class MainActivity extends AppCompatActivity {
     public void insertStory(){
         if (DatabaseManagement.isFirstTime)
         {
-            DateFormat df = new SimpleDateFormat("yyyy.MM.dd  'at' HH:mm:ss ");
-            String date = df.format(Calendar.getInstance().getTime());
+           addStoryToDbFromAssets(1,"عادت می کنم","adat.txt","عاشقانه","زویا پیرزاد");
+            addStoryToDbFromAssets(2,"خانه مرگ","death.txt","ترسناک","ار ال استاین");
+            addStoryToDbFromAssets(3,"راز الن","ellen.txt","عاشقانه","جین بوکر");
+            addStoryToDbFromAssets(4,"کیمیاگر","kimi.txt","عاشقانه","پاولو کویلو");
+            addStoryToDbFromAssets(5,"کشیش ویکفیلد","story2.txt","خانوادگی"," الیور گلدسمیت ");
 
-            for(int i=1 ; i<10 ;i++) {
-                tb_Story story = new tb_Story();
-                story.PKStory = i;
-                story.StoryName = "داستان چرت"+String.valueOf(i);
-                story.Story = getTermsStringBase("story.txt");
-                story.Genre = "علمی تخیلی "+i;
-                story.Like = 0;
-                story.Rate = i;
-                story.Version = i;
-                story.MarkedPlace = i;
-                story.CreateDate = date ;
-                story.Author = " علی مبینی" ;
 
-                tb_StoryDataSource dataSource = new tb_StoryDataSource(MainActivity.this);
-                dataSource.open();
-                dataSource.add(story);
-                dataSource.close();
-            }
             DatabaseManagement.isFirstTime =false;
         }
 
@@ -238,7 +229,27 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    public void addStoryToDbFromAssets(int pk,String StName,String Story,String Genre,String Author){
+        DateFormat df = new SimpleDateFormat("yyyy.MM.dd  'at' HH:mm:ss ");
+        String date = df.format(Calendar.getInstance().getTime());
 
+        tb_Story story = new tb_Story();
+        story.id = pk;
+        story.storyName = StName;
+        story.storyText = getTermsStringBase(Story);
+        story.genre = Genre;
+        story.like = 0;
+        story.rate = 0;
+        story.version = 1;
+        story.markedPlace = 0;
+        story.createDate = date ;
+        story.author = Author ;
+
+        tb_StoryDataSource dataSource = new tb_StoryDataSource(MainActivity.this);
+        dataSource.open();
+        dataSource.add(story);
+        dataSource.close();
+    }
     public void setServerRespond(){
 
         WebService webService = new WebService(MainActivity.this, new WebService.OnWebServiceListener() {
@@ -257,6 +268,62 @@ public class MainActivity extends AppCompatActivity {
         });
         webService.transmitAsync("api/values");
 
+    }
+
+
+    public class LoadMyList extends AsyncTask<Void ,Void,Void> {
+
+        Context _Context;
+        ProgressDialog proDialog;
+        String apiUrl = "api/StoryTemp";
+
+        public LoadMyList(Context context)
+        {
+            _Context = context;
+        }
+        public LoadMyList(Context context , String apiUrl)
+        {
+            this.apiUrl = apiUrl;
+            _Context = context;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            proDialog = new ProgressDialog(_Context);
+            proDialog.setTitle("منتظر باشید");
+            proDialog.setMessage("Loding...");
+            proDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            //proDialog.setIcon(R.drawable.)
+            proDialog.setCancelable(false);
+            proDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            WebService webService = new WebService(MainActivity.this, new WebService.OnWebServiceListener() {
+                @Override
+                public void onDataReceived(String value) {
+                    Gson gson = new Gson();
+                    StoryListActivity.storyList =  gson.fromJson(value,new TypeToken<List<tb_Story>>() {}.getType());
+                    lst2 =  gson.fromJson(value,new TypeToken<List<tb_Story>>() {}.getType());
+                }
+            });
+            webService.transmitAsync(apiUrl);
+
+            StoryListActivity.storyList =lst2;
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Intent intent=new Intent(MainActivity.this, StoryListActivity.class);
+            startActivity(intent);
+            proDialog.dismiss();
+        }
     }
 
 }

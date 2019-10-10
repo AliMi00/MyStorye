@@ -1,22 +1,26 @@
 package com.yahoo.mystorye;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,6 +33,7 @@ import database.table.tb_Story;
 
 public class TestStoryActivity extends AppCompatActivity {
 
+    AdView adViewBottom;
     TextView txtStoryName,txtGenre,txtAuthor;
     Button btnGoPage,btnMax,btnMin;
     ListView lstStory;
@@ -45,6 +50,12 @@ public class TestStoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_story);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        //adding banner ads
+        //MobileAds.initialize(getApplicationContext(),"ca-app-pub-3940256099942544~3347511713");
+        adViewBottom =findViewById(R.id.adViewBottoms);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adViewBottom.loadAd(adRequest);
 
         txtStoryName = findViewById(R.id.txtStoryName);
         txtGenre = findViewById(R.id.txtGenre);
@@ -65,26 +76,8 @@ public class TestStoryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         PKStory =intent.getIntExtra("PK",0);
 
-        tb_StoryDataSource dataSource = new tb_StoryDataSource(TestStoryActivity.this);
-        dataSource.open();
-        FullStory = dataSource.find(PKStory);
-        dataSource.close();
-        PageNum=FullStory.MarkedPlace;
-
-        StoryPages = getTermsString(FullStory.Story);
-
-        MyAdapter = new ListStory_Adapter(TestStoryActivity.this,
-                StoryPages,
-                R.layout.view_story_template,
-                clickListener);
-        lstStory =findViewById(R.id.StoryTestList);
-        lstStory.setAdapter(MyAdapter);
-        lstStory.setSelection(PageNum);
-
-        txtStoryName.setText(FullStory.StoryName);
-        txtAuthor.setText(FullStory.Author);
-        txtGenre.setText(FullStory.Genre);
-
+        LoadMyStory story =new  LoadMyStory(TestStoryActivity.this);
+        story.execute();
     }
 
     @Override
@@ -150,6 +143,11 @@ public class TestStoryActivity extends AppCompatActivity {
     };
 
     private List<String> getTermsString(String Story) {
+        if(Story.length() <25){
+            List<String> strings = new ArrayList<>();
+            strings.add(Story);
+            return strings;
+        }
         StringBuilder termsString = new StringBuilder();
         BufferedReader reader;
         List<String> pagesStory=new ArrayList<>();
@@ -193,6 +191,84 @@ public class TestStoryActivity extends AppCompatActivity {
         dataSource.open();
         dataSource.updatePage(PKStory,pageNumber);
         dataSource.close();
+    }
+    public class LoadMyStory extends AsyncTask<Void ,Void,Void> {
+
+        Context _Context;
+        ProgressDialog proDialog;
+        String apiUrl = "api/StoryTemp";
+
+        public LoadMyStory(Context context)
+        {
+            _Context = context;
+        }
+        public LoadMyStory(Context context , String apiUrl)
+        {
+            this.apiUrl = apiUrl;
+            _Context = context;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            proDialog = new ProgressDialog(_Context);
+            proDialog.setTitle("منتظر باشید");
+            proDialog.setMessage("Loading...");
+            proDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            //proDialog.setIcon(R.drawable.)
+            proDialog.setCancelable(false);
+            proDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            if(PKStory < 100){
+                tb_StoryDataSource dataSource = new tb_StoryDataSource(TestStoryActivity.this);
+                dataSource.open();
+                FullStory = dataSource.find(PKStory);
+                dataSource.close();
+            }
+            else {
+                WebService web = new WebService(TestStoryActivity.this, new WebService.OnWebServiceListener() {
+                    @Override
+                    public void onDataReceived(String value) {
+                        Gson gson = new Gson();
+                        FullStory = gson.fromJson(value,tb_Story.class);
+                    }
+                });
+                web.transmitAsync("api/storyTemp/single/"+PKStory);
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+
+            StoryPages = getTermsString(FullStory.storyText);
+            if(StoryPages.size() > FullStory.markedPlace){
+                PageNum=FullStory.markedPlace;
+            }
+            else {
+                PageNum = 0;
+            }
+
+            MyAdapter = new ListStory_Adapter(TestStoryActivity.this,
+                    StoryPages,
+                    R.layout.view_story_template,
+                    clickListener);
+            lstStory =findViewById(R.id.StoryTestList);
+            lstStory.setAdapter(MyAdapter);
+            lstStory.setSelection(PageNum);
+
+            txtStoryName.setText(FullStory.storyName);
+            txtAuthor.setText(FullStory.author);
+            txtGenre.setText(FullStory.genre);
+            proDialog.dismiss();
+        }
     }
 
 }
