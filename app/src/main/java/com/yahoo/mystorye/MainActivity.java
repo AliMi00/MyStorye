@@ -164,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 //Methods
+    //add static stories to db
+    //todo add more stories to assets and here
     public void insertStory(){
         if (DatabaseManagement.isFirstTime)
         {
@@ -178,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    //not use but make string from assets
     private List<String> getTermsString(String FileName) {
         StringBuilder termsString = new StringBuilder();
         BufferedReader reader;
@@ -207,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
+    //read the file and make string
     private String getTermsStringBase(String FileName) {
         StringBuilder termsString = new StringBuilder();
         BufferedReader reader;
@@ -228,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
-
+    //add story to db
     public void addStoryToDbFromAssets(int pk,String StName,String Story,String Genre,String Author){
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd  'at' HH:mm:ss ");
         String date = df.format(Calendar.getInstance().getTime());
@@ -250,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
         dataSource.add(story);
         dataSource.close();
     }
+    //check for connecting to server
     public void setServerRespond(){
 
         WebService webService = new WebService(MainActivity.this, new WebService.OnWebServiceListener() {
@@ -271,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //get stories from web api and go to story list activity async
     public class LoadMyList extends AsyncTask<Void ,Void,Void> {
 
         Context _Context;
@@ -300,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-
+            //get stories list from web api
             WebService webService = new WebService(MainActivity.this, new WebService.OnWebServiceListener() {
                 @Override
                 public void onDataReceived(String value) {
@@ -309,8 +315,9 @@ public class MainActivity extends AppCompatActivity {
                     lst2 =  gson.fromJson(value,new TypeToken<List<tb_Story>>() {}.getType());
                 }
             });
+            //Assign api address
             webService.transmitAsync(apiUrl);
-
+            //add story list to activity to show
             StoryListActivity.storyList =lst2;
 
 
@@ -320,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            //load storyList Activity
             Intent intent=new Intent(MainActivity.this, StoryListActivity.class);
             startActivity(intent);
             proDialog.dismiss();
